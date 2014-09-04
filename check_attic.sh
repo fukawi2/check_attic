@@ -82,6 +82,9 @@ function main() {
     exit -1
   fi
 
+  ### can we find the 'attic' command?
+  hash attic 2>/dev/null || { echo 'attic binary not found!'; exit -1; }
+
   #TODO: export ATTIC_PASSPHRASE=
   
   ### make sure at least one backup has been made
