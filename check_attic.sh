@@ -92,7 +92,7 @@ function main() {
 
   ### find the last archive timestamp and calcuate difference in seconds, then
   ### convert to minutes and evaluate
-  local last_attic_archive=$(attic list "$attic_repo" | awk '{ tz=$2 } END{ print $tz }')
+  local last_attic_archive=$(attic list "$attic_repo" | awk 'END{ $1=""; print $0 }')
   local tz_now=$(date +%s)
   local tz_then=$(date -d "$last_attic_archive" +%s)
   diff_secs=$(($tz_now-$tz_then))
