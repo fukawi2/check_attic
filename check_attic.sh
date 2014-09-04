@@ -25,7 +25,7 @@ readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
 function usage() {
-  echo "$PROGNAME /path/to/attic/repo [warning_age] [critical_age]"
+  echo "$PROGNAME -p /path/to/attic/repo [-w warning_age] [-c critical_age]"
   echo
   echo 'Time periods are in MINUTES"'
 }
@@ -48,15 +48,39 @@ function exit_unknown() {
 }
 
 function main() {
-  local attic_repo="${1:-}"
+  # defaults to be overridden by command line args below
+  local attic_repo=
+  local age_warn=3600   # 3600 = 24 hours
+  local age_crit=10800  # 10800 = 3 Days
+
+  ### get command line args
+  while getopts “hw:c:p:” OPTION ; do
+    case $OPTION in
+    h)
+      usage
+      exit -1
+      ;;
+    p)
+      attic_repo=$OPTARG
+      ;;
+    w)
+      age_warn=$OPTARG
+      ;;
+    c)
+      age_crit=$OPTARG
+      ;;
+    ?)
+      usage
+      exit -1
+      ;;
+    esac
+  done
 
   ### check command line args
   if [[ ! -n "$attic_repo" ]] ; then
     usage
-    exit_unknown 'Invalid command'
+    exit -1
   fi
-  local age_warn=${2:-3600}   # 3600 = 24 hours
-  local age_crit=${3:-10800}  # 10800 = 3 Days
 
   #TODO: export ATTIC_PASSPHRASE=
   
