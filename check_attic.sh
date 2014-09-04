@@ -50,8 +50,10 @@ function exit_unknown() {
 function main() {
   # defaults to be overridden by command line args below
   local attic_repo=
-  local age_warn=3600   # 3600 = 24 hours
-  local age_crit=10800  # 10800 = 3 Days
+  local -i age_warn=3600   # 3600 = 24 hours
+  local -i age_crit=10800  # 10800 = 3 Days
+
+  export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
   ### get command line args
   while getopts “hw:c:p:” OPTION ; do
@@ -61,13 +63,13 @@ function main() {
       exit -1
       ;;
     p)
-      attic_repo=$OPTARG
+      attic_repo="$OPTARG"
       ;;
     w)
-      age_warn=$OPTARG
+      age_warn="$OPTARG"
       ;;
     c)
-      age_crit=$OPTARG
+      age_crit="$OPTARG"
       ;;
     ?)
       usage
